@@ -4,15 +4,14 @@ import { nodeResolve } from '@rollup/plugin-node-resolve'
 import url from '@rollup/plugin-url'
 import commonjs from '@rollup/plugin-commonjs'
 import babel from '@rollup/plugin-babel'
-import json from '@rollup/plugin-json';
-import { terser } from 'rollup-plugin-terser';
+import json from '@rollup/plugin-json'
 import { visualizer } from 'rollup-plugin-visualizer'
 import typescript from 'rollup-plugin-typescript2'
 import ttypescript from 'ttypescript'
 
-import packageJson from './package.json'
+const packageJson = require('./package.json');
 
-const extensions = DEFAULT_EXTENSIONS.concat(['.ts', '.tsx'])
+const extensions = DEFAULT_EXTENSIONS.concat(['.ts', '.tsx']);
 
 const commonPlugins = [
     typescript({
@@ -45,12 +44,11 @@ const commonPlugins = [
         extensions,
     }),
     peerDepsExternal(),
-    terser(),
     url(),
     visualizer({
         filename: 'stats.html',
     }),
-]
+];
 
 function setUpConfig({ output }) {
     return {
@@ -58,6 +56,7 @@ function setUpConfig({ output }) {
         output: {
             ...output,
             sourcemap: true,
+            preserveModules: output.format === 'esm',
         },
         plugins: [
             nodeResolve({
@@ -67,7 +66,6 @@ function setUpConfig({ output }) {
             ...commonPlugins,
         ],
         external: [/@babel\/runtime/],
-        preserveModules: output.format === 'esm'
     }
 }
 
@@ -84,4 +82,4 @@ export default [
             format: 'esm',
         }
     }),
-]
+];
