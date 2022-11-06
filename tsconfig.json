@@ -18,6 +18,9 @@
     "allowJs": true,
     "noImplicitAny": false,
     "baseUrl": "./",
+    "paths": {
+      "@layout/*": ["src/layout/*"]
+    }
   },
   "types": ["react", "jest"],
   "include": [
