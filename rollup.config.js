@@ -2,9 +2,11 @@ import { DEFAULT_EXTENSIONS } from '@babel/core'
 import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import url from '@rollup/plugin-url'
+import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import babel from '@rollup/plugin-babel'
 import json from '@rollup/plugin-json'
+import postcss from 'rollup-plugin-postcss';
 import { visualizer } from 'rollup-plugin-visualizer'
 import typescript from 'rollup-plugin-typescript2'
 import ttypescript from 'ttypescript'
@@ -14,6 +16,14 @@ const packageJson = require('./package.json');
 const extensions = DEFAULT_EXTENSIONS.concat(['.ts', '.tsx']);
 
 const commonPlugins = [
+    peerDepsExternal(),
+    postcss({
+        minimize: true,
+        modules: true,
+        extract: true
+    }),
+    resolve(),
+    commonjs(),
     typescript({
         typescript: ttypescript,
         tsconfig: './tsconfig.json',
@@ -36,14 +46,12 @@ const commonPlugins = [
             ],
         },
     }),
-    commonjs(),
     json(),
     babel({
         babelHelpers: 'runtime',
         exclude: 'node_modules/**',
         extensions,
     }),
-    peerDepsExternal(),
     url(),
     visualizer({
         filename: 'stats.html',
